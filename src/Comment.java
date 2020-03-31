@@ -1,4 +1,5 @@
 import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 public class Comment {
     private Date date; //date of the comment
