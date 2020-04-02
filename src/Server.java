@@ -9,12 +9,12 @@ import java.rmi.registry.LocateRegistry;
 public class Server {
     public static void main(String[] args) {
         try {
-            LocateRegistry.createRegistry(1099);
+            //LocateRegistry.createRegistry(1199);
 
-            System.out.println("Mise en place du Security Manager ...");
+            /*System.out.println("Mise en place du Security Manager ...");
             if (System.getSecurityManager() == null) {
                 System.setSecurityManager(new RMISecurityManager());
-            }
+            }*/
 
             //instanciation de notre objet
             ReadFile data = new ReadFile();

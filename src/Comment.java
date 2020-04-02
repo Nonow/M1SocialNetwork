@@ -3,12 +3,12 @@ import java.util.concurrent.TimeUnit;
 
 public class Comment {
     private Date date; //date of the comment
-    private int idCommentaire; // is the (unique) identiﬁer of the comment (integer)
-    private int idUser; // is the (unique) identiﬁer of the user (integer)
+    private int idCommentaire; // is the (unique) identifier of the comment (integer)
+    private int idUser; // is the (unique) identifier of the user (integer)
     private String comment; // is the content of the comment (string)
     private String user; // is the name of the user (string)
-    private int pidCommentaire; // is the identiﬁer of the comment this comment comments (-1 if this comment comments a message)
-    private int pidMessage; // is the identiﬁer of the message this comment comments (-1 if this comment comments a comment)
+    private int pidCommentaire; // is the identifier of the comment this comment comments (-1 if this comment comments a message)
+    private int pidMessage; // is the identifier of the message this comment comments (-1 if this comment comments a comment)
     private int score;
 
     public Comment (Date p_date, int p_idC, int p_idU, String p_comment, String p_user, int p_pidC, int p_pidM){

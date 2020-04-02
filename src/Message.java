@@ -3,8 +3,8 @@ import java.util.concurrent.TimeUnit;
 
 public class Message {
     private Date date; //date of the message
-    private int idMessage; //is the (unique) identiﬁer of the message (integer)
-    private int idUser; //is the (unique) identiﬁer of the user (integer)
+    private int idMessage; //is the (unique) identifier of the message (integer)
+    private int idUser; //is the (unique) identifier of the user (integer)
     private String message; //is the content of the message (string)
     private String user; //is the name of the user (string)
     private int score;

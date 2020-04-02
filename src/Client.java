@@ -8,12 +8,13 @@ import java.rmi.RemoteException;
 public class Client {
     public static void main(String[] args) {
         System.out.println("Lancement du client");
+        /*
         if (System.getSecurityManager() == null) {
             System.setSecurityManager(new RMISecurityManager());
-        }
+        }*/
 
         try {
-            Remote remote = Naming.lookup("rmi://10.0.0.13/data");
+            Remote remote = Naming.lookup("rmi://127.0.0.1/TestRMI");
             System.out.println(remote);
             if (remote instanceof interfaceRMI) {
                 //on appel nos function a partir du client ici
