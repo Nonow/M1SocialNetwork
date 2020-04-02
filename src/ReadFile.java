@@ -1,32 +1,27 @@
 import java.io.BufferedReader;
 import java.io.FileReader;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Random;
+
+import static java.lang.Thread.sleep;
 
 public class ReadFile {
-    public String lignes[];
-    public int i=0;
 
-    public ReadFile (String fileName) throws IOException {
-        BufferedReader lecteurAvecBuffer = null;
-        String ligne ="debut";
+    public static void main(String[] args) {
+        Random random = new Random();
+        try (FileReader reader = new FileReader("src/reseauSocial.txt");
+             BufferedReader br = new BufferedReader(reader)) {
 
-        try
-        {
-            lecteurAvecBuffer = new BufferedReader(new FileReader(fileName));
+            // read line by line
+            String line;
+            while ((line = br.readLine()) != null) {
+                sleep(3000/(random.nextInt(3)+1));
+                System.out.println(line);
+            }
+
+        } catch (IOException | InterruptedException e) {
+            System.err.format("IOException: %s%n", e);
         }
-        catch(FileNotFoundException exc)
-        {
-            lignes[i]=("Erreur d'ouverture");
-        }
-        while (ligne != null) {
-            System.out.println(ligne);
-            ligne = lecteurAvecBuffer.readLine();
-            lignes[i]= ligne;
-            i++;
-        }
-        lecteurAvecBuffer.close();
     }
+
 }
