@@ -7,7 +7,7 @@
 
 ## Utilisation
 
-** Attention ! **  Il faut utiliser une version 8 de java.
+**Attention !**  Il faut utiliser une version 8 de java.
 
 ### Utilisation Windows :
 
