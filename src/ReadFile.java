@@ -4,20 +4,20 @@ import java.io.IOException;
 import java.util.Random;
 import java.util.Date;
 import java.util.ArrayList;
-
+import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
 import static java.lang.Thread.sleep;
 
-public class ReadFile {
+public class ReadFile extends UnicastRemoteObject implements interfaceRMI {
     protected ArrayList<Message> listMessage;
     protected ArrayList<Comment> listComment;
 
-
-    public ReadFile (){
+    public ReadFile() throws RemoteException {
         listMessage = new ArrayList<>();
         listComment = new ArrayList<>();
     }
 
-    public void init() {
+    public void launch() throws RemoteException {
         Random random = new Random();
 
         try (FileReader reader = new FileReader("src/reseauSocial.txt");
@@ -50,9 +50,7 @@ public class ReadFile {
                     default:
                         System.out.println("erreur lecture ligne du fichier");
                 }
-
             }
-
             br.close();
         } catch (IOException | InterruptedException e) {
             System.err.format("IOException: %s%n", e);
