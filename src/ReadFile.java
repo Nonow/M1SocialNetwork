@@ -11,16 +11,35 @@ import static java.lang.Thread.sleep;
 public class ReadFile extends UnicastRemoteObject implements interfaceRMI {
     protected ArrayList<Message> listMessage;
     protected ArrayList<Comment> listComment;
+    protected int Best[];
 
     public ReadFile() throws RemoteException {
         listMessage = new ArrayList<>();
         listComment = new ArrayList<>();
+        Best = new int [5];
     }
+
+    public ArrayList<Message> getlistMessage() {
+        return listMessage;
+    }
+
+    public void setlistMessage(ArrayList<Message> listMessage) {
+        this.listMessage = listMessage;
+    }
+
+    public ArrayList<Comment> getlistComment() {
+        return listComment;
+    }
+
+    public void setlistComment(ArrayList<Comment> listComment) {
+        this.listComment = listComment;
+    }
+
 
     public void launch() throws RemoteException {
         Random random = new Random();
 
-        try (FileReader reader = new FileReader("src/reseauSocial.txt");
+        try (FileReader reader = new FileReader("reseauSocial.txt");
              BufferedReader br = new BufferedReader(reader)) {
 
             // read line by line
@@ -56,5 +75,52 @@ public class ReadFile extends UnicastRemoteObject implements interfaceRMI {
             System.err.format("IOException: %s%n", e);
         }
     }
+
+    // Actualise les scores par rapport au temps
+    public void Maj_score() throws RemoteException{
+        Date date = new Date();
+        for(int i=0; i < getlistMessage().size(); i++){
+            Message msg = Score_message(date,i);
+            listMessage.set(i,msg);
+        }
+    }
+
+    // Actualise le score d'un message
+    public Message Score_message(Date date,int x){
+        Message msg = getlistMessage().get(x);      // on prend un message de la liste
+        msg.Actuscore(date);
+        for (int i = 0; i < getlistComment().size(); i++) {     // parcours liste Commentaire
+            if (msg.getIdMessage() == getlistComment().get(i).getPidMessage()) {        // Si l'id du msg = PidMessage dans le commmentaire
+                msg.setNbcmt(msg.getNbcmt() + 1);
+                Comment cmt = Score_comment(date, i);
+                listComment.set(i, cmt);
+                msg.addScore(listComment.get(i).getScore());        // on ajoute les scores des commentaires au message
+            }
+        }
+        if (msg.getScore() < 0) {       // Si le score atteint 0
+            msg.setScore(0);
+        }
+        return msg;
+    }
+
+    // Actualise le score d'un commentaire comme la fonction Score_message
+    public Comment Score_comment(Date date,int x){
+        Comment cmt = getlistComment().get(x);
+        cmt.Actuscore(date);
+        for (int i = 0; i < getlistComment().size(); i++) {
+            if (cmt.getIdCommentaire() == getlistComment().get(i).getPidCommentaire()) {
+                cmt.setNbcmt(cmt.getNbcmt() + 1);
+                Comment tmp = Score_comment(date, i);
+                listComment.set(i, tmp);
+                cmt.addScore(listComment.get(i).getScore());
+            }
+        }
+        if (cmt.getScore() < 0) {
+            cmt.setScore(0);
+        }
+        return cmt;
+    }
+
+
 
 }

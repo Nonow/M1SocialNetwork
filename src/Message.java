@@ -8,6 +8,7 @@ public class Message {
     private String message; //is the content of the message (string)
     private String user; //is the name of the user (string)
     private int score;
+    private int nbcmt; // nombre de commentaires sur le message
 
     public Message(Date pdate, int pidM, int pidU, String pmessage, String puser){
         date = pdate;
@@ -16,9 +17,13 @@ public class Message {
         message = pmessage;
         user = puser;
         score = 20;
+        nbcmt = 0;
+
     }
 
     /* ********** Setters *********** */
+    public void setNbcmt(int nbcmt) { this.nbcmt = nbcmt; }
+
     public void setDate(Date date) {
         this.date = date;
     }
@@ -43,7 +48,23 @@ public class Message {
         this.score = score;
     }
 
+    public void addScore(int i) {
+        score += i;
+    }
+
+    public void minusScore(int i) { score -= i;}
+
+    public void Actuscore(Date date){
+        long d = Math.abs(date.getTime() - getDate().getTime());
+        int time = (int) TimeUnit.SECONDS.convert(d,TimeUnit.MILLISECONDS);
+        if(time >= 30){
+            minusScore(1);
+        }
+    }
+
     /* ********** Getters *********** */
+    public int getNbcmt() { return nbcmt;}
+
     public Date getDate() {
         return date;
     }
