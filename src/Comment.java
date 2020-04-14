@@ -10,7 +10,6 @@ public class Comment {
     private int pidCommentaire; // is the identifier of the comment this comment comments (-1 if this comment comments a message)
     private int pidMessage; // is the identifier of the message this comment comments (-1 if this comment comments a comment)
     private int score;
-    private int nbcmt; // nombre de commentaires sur le commentaire
 
     public Comment (Date p_date, int p_idC, int p_idU, String p_comment, String p_user, int p_pidC, int p_pidM){
         date = p_date;
@@ -21,12 +20,9 @@ public class Comment {
         pidCommentaire = p_pidC;
         pidMessage = p_pidM;
         score = 20;
-        nbcmt = 0;
     }
 
     /* ********** Setters *********** */
-    public void setNbcmt(int nbcmt) { this.nbcmt = nbcmt; }
-
     public void setDate(Date date) {
         this.date = date;
     }
@@ -59,21 +55,15 @@ public class Comment {
         this.score = score;
     }
 
-    public void addScore(int i) { score += i; }
+    public void addScore(int i) {
+        setScore(getScore()+i);
+    }
 
-    public void minusScore(int i) { score -= i;}
-
-    public void Actuscore(Date date){
-        long d = Math.abs(date.getTime() - getDate().getTime());
-        int time = (int) TimeUnit.SECONDS.convert(d,TimeUnit.MILLISECONDS);
-        if(time >= 30){
-            minusScore(1);
-        }
+    public void minusScore(int i) {
+        setScore(getScore()-i);
     }
 
     /* ********** Getters *********** */
-    public int getNbcmt() { return nbcmt;}
-
     public Date getDate() {
         return date;
     }
