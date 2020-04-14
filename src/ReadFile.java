@@ -65,10 +65,6 @@ public class ReadFile extends UnicastRemoteObject implements interfaceRMI {
     }
 /*
     public void updateScore () throws RemoteException{
-
-    }
-*/
-    public void updateScore (int id) throws RemoteException{
         int sum = 0;
         for (Message o:listMessage){
             if (o.getIdMessage() == id){
@@ -79,6 +75,15 @@ public class ReadFile extends UnicastRemoteObject implements interfaceRMI {
                 }
                 sum = sum + o.getScore();
                 o.setImportance(sum);
+                System.out.println(o.getImportance());
+            }
+        }
+    }
+*/
+    public void updateScore (int id) throws RemoteException{
+        for (Message o:listMessage){
+            if (o.getIdMessage() == id){
+                o.setImportance(o.getImportance()+20);
                 System.out.println(o.getImportance());
             }
         }
