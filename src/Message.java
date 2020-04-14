@@ -9,6 +9,7 @@ public class Message {
     private String user; //is the name of the user (string)
     private int score;
     private int nbcmt; // nombre de commentaires sur le message
+    private int importance; // Value of importance of a tread
 
     public Message(Date pdate, int pidM, int pidU, String pmessage, String puser){
         date = pdate;
@@ -18,7 +19,7 @@ public class Message {
         user = puser;
         score = 20;
         nbcmt = 0;
-
+        importance = 20;
     }
 
     /* ********** Setters *********** */
@@ -42,6 +43,10 @@ public class Message {
 
     public void setUser(String user) {
         this.user = user;
+    }
+
+    public void setImportance(int importance) {
+        this.importance = importance;
     }
 
     public void setScore(int score) {
@@ -87,5 +92,9 @@ public class Message {
 
     public int getScore() {
         return score;
+    }
+
+    public int getImportance() {
+        return importance;
     }
 }

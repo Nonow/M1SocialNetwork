@@ -15,15 +15,15 @@ public class Server {
             if (System.getSecurityManager() == null) {
                 System.setSecurityManager(new RMISecurityManager());
             }*/
-
             //instanciation de notre objet
             ReadFile data = new ReadFile();
-            //lancement de la lecture du fichier reseauSocial.txt
-            data.launch();
             //Enregistrement de noms RMI
-            String url = "rmi://" + InetAddress.getLocalHost().getHostAddress() + "/TestRMI";
+            String url = "rmi://" + InetAddress.getLocalHost().getHostAddress() + "/interfaceRMI";
             System.out.println("Enregistrement de l'objet avec l'url : " + url);
             Naming.rebind(url, data);
+
+            //lancement de la lecture du fichier reseauSocial.txt
+            data.launch();
 
             System.out.println("Serveur lancé");
         } catch (RemoteException e) {

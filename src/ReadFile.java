@@ -6,6 +6,8 @@ import java.util.Date;
 import java.util.ArrayList;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.concurrent.TimeUnit;
+
 import static java.lang.Thread.sleep;
 
 public class ReadFile extends UnicastRemoteObject implements interfaceRMI {
@@ -69,6 +71,7 @@ public class ReadFile extends UnicastRemoteObject implements interfaceRMI {
                     default:
                         System.out.println("erreur lecture ligne du fichier");
                 }
+                Maj_score();
             }
             br.close();
         } catch (IOException | InterruptedException e) {
@@ -82,6 +85,7 @@ public class ReadFile extends UnicastRemoteObject implements interfaceRMI {
         for(int i=0; i < getlistMessage().size(); i++){
             Message msg = Score_message(date,i);
             listMessage.set(i,msg);
+            System.out.println(msg.getScore());
         }
     }
 
@@ -121,6 +125,43 @@ public class ReadFile extends UnicastRemoteObject implements interfaceRMI {
         return cmt;
     }
 
+    public String bestOf(){
+        String var = "ok tu as reussit bg";
+        return var;
+    }
+/*
+    //function d'incrementation val Importance pour ajout comment sans idMessage
+    public void updateScore (int pidComment) throws RemoteException{
+        for (Comment com:listComment){
+            if (com.getIdCommentaire() == pidComment){
+                //on verifie s'il s'agit d'un commentaire directement lier a un message
+                if (com.getPidMessage() > 0){
+                    for (Message o:listMessage){
+                        if (o.getIdMessage() == com.getPidMessage()){
+                            o.setImportance(o.getImportance()+20);
+                            System.out.println(" recherche  " + o.getImportance());
+                        }
+                    }
+                }
+                // si c'est un commentaire de commentaire on relancer la function avec le pere
+                else{
+                    updateScore(com.getPidCommentaire());
+                }
+            }
+        }
 
+
+    }
+
+    //function d'incrementation val Importance pour ajout comment avec idMessage
+    public void updateScoreID (int pidMessage) throws RemoteException{
+        for (Message o:listMessage){
+            if (o.getIdMessage() == pidMessage){
+                o.setImportance(o.getImportance()+20);
+                System.out.println(o.getImportance());
+            }
+        }
+    }
+    */
 
 }

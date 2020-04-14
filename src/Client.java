@@ -14,11 +14,11 @@ public class Client {
         }*/
 
         try {
-            Remote remote = Naming.lookup("rmi://127.0.0.1/TestRMI");
+            interfaceRMI remote = (interfaceRMI) Naming.lookup("rmi://192.168.56.1/interfaceRMI");
             System.out.println(remote);
-            if (remote instanceof interfaceRMI) {
-                //on appel nos function a partir du client ici
-            }
+            //on appel nos function a partir du client ici
+            System.out.println(remote.bestOf());
+
         } catch (MalformedURLException e) {
             e.printStackTrace();
         } catch (RemoteException e) {
