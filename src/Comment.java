@@ -9,7 +9,7 @@ public class Comment {
     private String user; // is the name of the user (string)
     private int pidCommentaire; // is the identifier of the comment this comment comments (-1 if this comment comments a message)
     private int pidMessage; // is the identifier of the message this comment comments (-1 if this comment comments a comment)
-    private int score;
+    private int score; // score of a comment
 
     public Comment (Date p_date, int p_idC, int p_idU, String p_comment, String p_user, int p_pidC, int p_pidM){
         date = p_date;

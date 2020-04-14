@@ -7,7 +7,8 @@ public class Message {
     private int idUser; //is the (unique) identifier of the user (integer)
     private String message; //is the content of the message (string)
     private String user; //is the name of the user (string)
-    private int score;
+    private int score; // score of a message
+    private int importance; // Value of importance of a tread
 
     public Message(Date pdate, int pidM, int pidU, String pmessage, String puser){
         date = pdate;
@@ -16,6 +17,7 @@ public class Message {
         message = pmessage;
         user = puser;
         score = 20;
+        importance = 0;
     }
 
     /* ********** Setters *********** */
@@ -43,6 +45,10 @@ public class Message {
         this.score = score;
     }
 
+    public void setImportance(int importance) {
+        this.importance = importance;
+    }
+
     /* ********** Getters *********** */
     public Date getDate() {
         return date;
@@ -66,5 +72,9 @@ public class Message {
 
     public int getScore() {
         return score;
+    }
+
+    public int getImportance() {
+        return importance;
     }
 }

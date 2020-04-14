@@ -20,7 +20,7 @@ public class ReadFile extends UnicastRemoteObject implements interfaceRMI {
     public void launch() throws RemoteException {
         Random random = new Random();
 
-        try (FileReader reader = new FileReader("src/reseauSocial.txt");
+        try (FileReader reader = new FileReader("reseauSocial.txt");
              BufferedReader br = new BufferedReader(reader)) {
 
             // read line by line
@@ -38,6 +38,9 @@ public class ReadFile extends UnicastRemoteObject implements interfaceRMI {
                     case 4:
                         //System.out.println("case 4");
                         listMessage.add(new Message(date,Integer.parseInt(chaine[0]), Integer.parseInt(chaine[1]), chaine[2], chaine[3] ));
+                        //On met a jour le score du message
+                        //System.out.println(listMessage);
+                        updateScore(Integer.parseInt(chaine[0]));
                         break;
                     case 5:
                         //System.out.println("case 5");
@@ -54,6 +57,23 @@ public class ReadFile extends UnicastRemoteObject implements interfaceRMI {
             br.close();
         } catch (IOException | InterruptedException e) {
             System.err.format("IOException: %s%n", e);
+        }
+    }
+
+    public void findBestOf () throws RemoteException{
+
+    }
+/*
+    public void updateScore () throws RemoteException{
+
+    }
+*/
+    public void updateScore (int id) throws RemoteException{
+        for (Message o:listMessage){
+            if (o.getIdMessage() == id){
+                o.setImportance(o.getScore());
+                System.out.println(o.getImportance());
+            }
         }
     }
 
