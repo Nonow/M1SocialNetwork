@@ -38,9 +38,6 @@ public class ReadFile extends UnicastRemoteObject implements interfaceRMI {
                     case 4:
                         //System.out.println("case 4");
                         listMessage.add(new Message(date,Integer.parseInt(chaine[0]), Integer.parseInt(chaine[1]), chaine[2], chaine[3] ));
-                        //On met a jour le score du message
-                        //System.out.println(listMessage);
-                        updateScore(Integer.parseInt(chaine[0]));
                         break;
                     case 5:
                         //System.out.println("case 5");
@@ -49,6 +46,9 @@ public class ReadFile extends UnicastRemoteObject implements interfaceRMI {
                     case 6:
                         //System.out.println("case 6");
                         listComment.add(new Comment(date,Integer.parseInt(chaine[0]), Integer.parseInt(chaine[1]), chaine[2], chaine[3], -1,  Integer.parseInt(chaine[5]) ));
+                        //On met a jour le score du message lie
+                        //System.out.println(listMessage);
+                        updateScore(Integer.parseInt(chaine[5]));
                         break;
                     default:
                         System.out.println("erreur lecture ligne du fichier");
@@ -69,9 +69,16 @@ public class ReadFile extends UnicastRemoteObject implements interfaceRMI {
     }
 */
     public void updateScore (int id) throws RemoteException{
+        int sum = 0;
         for (Message o:listMessage){
             if (o.getIdMessage() == id){
-                o.setImportance(o.getScore());
+                for (Comment com:listComment){
+                    if (com.getPidMessage() == id){
+                        sum = sum + com.getScore();
+                    }
+                }
+                sum = sum + o.getScore();
+                o.setImportance(sum);
                 System.out.println(o.getImportance());
             }
         }

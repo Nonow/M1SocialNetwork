@@ -17,7 +17,7 @@ public class Message {
         message = pmessage;
         user = puser;
         score = 20;
-        importance = 0;
+        importance = 20;
     }
 
     /* ********** Setters *********** */
