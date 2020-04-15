@@ -21,25 +21,8 @@ public class ReadFile extends UnicastRemoteObject implements interfaceRMI {
     public ReadFile() throws RemoteException {
         listMessage = new ArrayList<>();
         listComment = new ArrayList<>();
-        Best = new int[5];
+        Best = new int[9];
     }
-
-    public ArrayList<Message> getlistMessage() {
-        return listMessage;
-    }
-
-    public void setlistMessage(ArrayList<Message> listMessage) {
-        this.listMessage = listMessage;
-    }
-
-    public ArrayList<Comment> getlistComment() {
-        return listComment;
-    }
-
-    public void setlistComment(ArrayList<Comment> listComment) {
-        this.listComment = listComment;
-    }
-
 
     public void launch() throws RemoteException {
         Random random = new Random();
@@ -76,10 +59,19 @@ public class ReadFile extends UnicastRemoteObject implements interfaceRMI {
                         System.out.println("erreur lecture ligne du fichier");
                 }
                 Score_total();
+                System.out.println(AfficherBest());
             }
             br.close();
         } catch (IOException | InterruptedException e) {
             System.err.format("IOException: %s%n", e);
+        }
+    }
+
+    public void Score_total() throws RemoteException {
+        Best = new int[9];
+        for (Message msg : listMessage) {
+            Score_message(msg);
+            bestOf(msg);
         }
     }
 
@@ -104,9 +96,49 @@ public class ReadFile extends UnicastRemoteObject implements interfaceRMI {
         }
     }
 
+    public void bestOf(Message msg){
+        //System.out.println("Id message =  " + msg.getIdMessage() + " importance : " + msg.getImportance());
+        int challenger = msg.getImportance();
+        if(challenger > Best[8] || Best[6] == msg.getIdMessage()){
+            if(challenger > Best[5] || Best[3] == msg.getIdMessage()){
+                if(challenger > Best[2] || Best[0] == msg.getIdMessage()){
+                    Best[3] = Best[0];
+                    Best[4] = Best[1];
+                    Best[5] = Best[2];
+                    Best[0] = msg.getIdMessage();
+                    Best[1] = msg.getIdUser();
+                    Best[2] = challenger;
+                }
+                else{
+                    Best[6] = Best[3];
+                    Best[7] = Best[4];
+                    Best[8] = Best[5];
+                    Best[3] = msg.getIdMessage();
+                    Best[4] = msg.getIdUser();
+                    Best[5] = challenger;
+                }
+            }
+            else{
+                Best[6] = msg.getIdMessage();
+                Best[7] = msg.getIdUser();
+                Best[8] = challenger;
+            }
+        }
+    }
+
+    public String AfficherBest(){
+        String var = "";
+        for(int i=0;i<Best.length;i++){
+            var +=" " + Best[i] + " ";
+        }
+        return var;
+    }
+
+
+
     // Actualise le score d'un commentaire comme la fonction Score_message
     public int Score_comment(int x) {
-        Comment cmt = getlistComment().get(x);
+        Comment cmt = listComment.get(x);
         int score_tmp = cmt.getScore();
         for (int i = 0; i < listComment.size(); i++) {
             if (cmt.getIdCommentaire() == listComment.get(i).getPidCommentaire()) {
@@ -122,10 +154,7 @@ public class ReadFile extends UnicastRemoteObject implements interfaceRMI {
         return score_tmp;
     }
 
-    public String bestOf() {
-        String var = "ok tu as reussit bg";
-        return var;
-    }
+
 
     public void Maj_score() throws RemoteException {
         Date date = new Date();
@@ -136,8 +165,8 @@ public class ReadFile extends UnicastRemoteObject implements interfaceRMI {
                 int time = (int) TimeUnit.SECONDS.convert(d, TimeUnit.MILLISECONDS);
                 if (time != 0 && (time % 30) == 0) {
                     msg.minusScore(1);
+                    bestOf(msg);
                 }
-                System.out.println("Id message =  " + msg.getIdMessage() + " importance : " + msg.getImportance());
             }
             for (Comment cmt : listComment) {
                 long d = Math.abs(date.getTime() - cmt.getDate().getTime());
@@ -152,52 +181,5 @@ public class ReadFile extends UnicastRemoteObject implements interfaceRMI {
             System.err.format("IOException: %s%n", e);
         }
     }
-
-    public void Score_total() throws RemoteException {
-        for (Message msg : listMessage) {
-            Score_message(msg);
-        }
-    }
-
-
-    //function d'incrementation val Importance pour ajout comment sans idMessage
-    public void updateScore() throws RemoteException {
-        for (Comment com : listComment) {
-            //on verifie s'il s'agit d'un commentaire directement lier a un message
-            if (com.getPidMessage() > 0) {
-                for (Message o : listMessage) {
-                    if (o.getIdMessage() == com.getPidMessage()) {
-                        o.setScore(o.getScore() + com.getScore());
-                        System.out.println(" pour " + o.getIdMessage() + " on a " + o.getScore());
-                    }
-                }
-            }
-            // si c'est un commentaire de commentaire on relancer la function avec le pere
-            else {
-                updateScore(com.getPidCommentaire(), com.getScore());
-            }
-        }
-    }
-
-    public void updateScore(int pidCom, int score) throws RemoteException {
-        for (Comment com : listComment) {
-            if (com.getIdCommentaire() == pidCom) {
-                //on verifie s'il s'agit d'un commentaire directement lier a un message
-                if (com.getPidMessage() > 0) {
-                    for (Message o : listMessage) {
-                        if (o.getIdMessage() == com.getPidMessage()) {
-                            o.setScore(o.getScore() + (score + com.getScore()));
-                            System.out.println(" pour " + o.getIdMessage() + " on a " + o.getScore());
-                        }
-                    }
-                }
-                // si c'est un commentaire de commentaire on relancer la function avec le pere
-                else {
-                    updateScore(com.getPidCommentaire(), (score + com.getScore()));
-                }
-            }
-        }
-    }
-
 
 }
