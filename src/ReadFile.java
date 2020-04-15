@@ -8,6 +8,7 @@ import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.concurrent.TimeUnit;
 import java.lang.*;
+import java.util.Scanner;
 
 import static java.lang.Thread.sleep;
 
@@ -35,8 +36,7 @@ public class ReadFile extends UnicastRemoteObject implements interfaceRMI {
             while ((line = br.readLine()) != null) {
                 Date date = new Date();
                 //on attend 1 à 3 seconde
-                sleep(800);
-                //sleep(3000/(random.nextInt(3)+1));
+                sleep(3000/(random.nextInt(3)+1));
                 System.out.println(date + " Nouvelle ligne lu :" + line);
                 // on analyse la ligne lu
                 String[] chaine = line.split("\\|");
@@ -66,7 +66,7 @@ public class ReadFile extends UnicastRemoteObject implements interfaceRMI {
             System.err.format("IOException: %s%n", e);
         }
     }
-
+    /* Calcul du score_total et actualiser best */
     public void Score_total() throws RemoteException {
         Best = new int[9];
         for (Message msg : listMessage) {
@@ -78,62 +78,68 @@ public class ReadFile extends UnicastRemoteObject implements interfaceRMI {
     // Actualise le score d'un message
     public void Score_message(Message msg) {
         int score_tmp = 0;
-        if (msg.getImportance() > 0) {       // Si le score atteint 0
+        if (msg.getImportance() > 0) {       // Si le score atteint 0 on ne regarde plus le message
             msg.setImportance(msg.getScore());
             for (int i = 0; i < listComment.size(); i++) {     // parcours liste Commentaire
                 if (msg.getIdMessage() == listComment.get(i).getPidMessage()) {        // Si l'id du msg = PidMessage dans le commmentaire
-                    int cmt = Score_comment(i);
+                    int cmt = Score_comment(i);     // va chercher le score de tous les fils
                     score_tmp = score_tmp + cmt;
-                    //System.out.println("Score du commantaire "+cmt.getScore());
-                    //listComment.set(i, cmt);
-                    //System.out.println("Score du message " + msg.getScore());
                     msg.setImportance(msg.getScore() + score_tmp);
-                    //msg.addScore(cmt.getScore());        // on ajoute les scores des commentaires au message
-                    //System.out.println("Score importance " + msg.getImportance() + " i = "+ i);
-                    //}
                 }
             }
         }
     }
 
-    public void bestOf(Message msg){
+    public void bestOf(Message msg) {
         //System.out.println("Id message =  " + msg.getIdMessage() + " importance : " + msg.getImportance());
-        int challenger = msg.getImportance();
-        if(challenger > Best[8] || Best[6] == msg.getIdMessage()){
-            if(challenger > Best[5] || Best[3] == msg.getIdMessage()){
-                if(challenger > Best[2] || Best[0] == msg.getIdMessage()){
-                    Best[3] = Best[0];
+        int challenger = msg.getImportance();   // Score total du message
+        if (challenger > Best[8] || Best[6] == msg.getIdMessage()) {    // Si challenger est plus grand que le 3eme du best
+            if (challenger > Best[5] || Best[3] == msg.getIdMessage()) {    // Si plus grand que le 2eme
+                if (challenger > Best[2] || Best[0] == msg.getIdMessage()) {  // Si plus grand que le 1er
+                    Best[3] = Best[0];  // on passe le score de l'ancien 1er au deuxième
                     Best[4] = Best[1];
                     Best[5] = Best[2];
                     Best[0] = msg.getIdMessage();
                     Best[1] = msg.getIdUser();
                     Best[2] = challenger;
-                }
-                else{
-                    Best[6] = Best[3];
+                } else {
+                    Best[6] = Best[3];  // on passe le score du 2eme au troisieme
                     Best[7] = Best[4];
                     Best[8] = Best[5];
                     Best[3] = msg.getIdMessage();
                     Best[4] = msg.getIdUser();
                     Best[5] = challenger;
                 }
-            }
-            else{
+            } else {
                 Best[6] = msg.getIdMessage();
                 Best[7] = msg.getIdUser();
                 Best[8] = challenger;
             }
         }
     }
-
-    public String AfficherBest(){
+    /* Affichage best3 */
+    public String AfficherBest() {
         String var = "";
-        for(int i=0;i<Best.length;i++){
-            var +=" " + Best[i] + " ";
+        for (int i = 0; i < Best.length; i++) {
+            var += " " + Best[i] + " ";
         }
         return var;
     }
 
+    /* Affichage XML du best3 au client */
+    public String Best_XML() throws RemoteException {
+        String var = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<Bests>\n";
+        for (int i = 0; i < 3; i++) {
+            var += "<Best" + (i+1) + ">\n";
+            var += "<IdMessage>" + Best[i * 3] + "</IdMessage>\n";
+            var += "<IdUser>" + Best[(i * 3) + 1] + "</IdUser>\n";
+        }
+        var += "</Bests>";
+
+
+
+        return var;
+    }
 
 
     // Actualise le score d'un commentaire comme la fonction Score_message
@@ -154,8 +160,7 @@ public class ReadFile extends UnicastRemoteObject implements interfaceRMI {
         return score_tmp;
     }
 
-
-
+    /* Maj du score en fonction du temps. Réduit le score tout les 30s */
     public void Maj_score() throws RemoteException {
         Date date = new Date();
         try {

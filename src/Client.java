@@ -17,9 +17,8 @@ public class Client {
             interfaceRMI remote = (interfaceRMI) Naming.lookup("rmi://192.168.56.1/interfaceRMI");
             System.out.println(remote);
             //on appel nos function a partir du client ici
-            while(true){
-                //remote.Maj_score();
-            }
+            String var = remote.Best_XML();
+            System.out.println(var);
 
 
         } catch (MalformedURLException e) {
