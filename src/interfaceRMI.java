@@ -6,4 +6,5 @@ public interface interfaceRMI extends Remote {
     String bestOf() throws RemoteException;
     void Maj_score() throws RemoteException;
     void updateScore() throws RemoteException;
+    void Score_total() throws RemoteException;
 }

@@ -24,8 +24,10 @@ public class Server {
 
             //lancement de la lecture du fichier reseauSocial.txt
             data.launch();
-
             System.out.println("Serveur lancé");
+            data.Maj_score();
+
+            //System.out.println("Serveur lancé");
         } catch (RemoteException e) {
             e.printStackTrace();
         } catch (MalformedURLException e) {

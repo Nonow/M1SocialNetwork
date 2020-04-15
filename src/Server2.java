@@ -5,7 +5,7 @@ import java.rmi.RMISecurityManager;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 
-public class Client {
+public class Server2 {
     public static void main(String[] args) {
         System.out.println("Lancement du client");
         /*
@@ -18,7 +18,7 @@ public class Client {
             System.out.println(remote);
             //on appel nos function a partir du client ici
             while(true){
-                //remote.Maj_score();
+                remote.Maj_score();
             }
 
 

@@ -50,7 +50,7 @@ public class Message {
     }
 
     public void addScore(int i) {
-        setScore(getScore()+i);
+        setImportance(getScore()+i);
     }
 
     public void minusScore(int i) {
