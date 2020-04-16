@@ -24,3 +24,7 @@
 * Démarrer le RMIRegistry avec la commande `rmiregistry`
 * Démarrer le serveur depuis un autre terminal avec la commande `java Server`
 * Démarrer le client depuis un dernier terminal avec la commande `java Client`
+
+### Info utile
+
+* Lorsque le serveur est lancée vous pouvez voir les lignes qui sont lus par le programme dans le fichier resesauSocial.txt ainsi que les 3 meilleurs messages mit a jour en directe.
