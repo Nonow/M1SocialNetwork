@@ -30,3 +30,5 @@
 Lorsque le serveur est lancé, vous pouvez voir dans le terminal les lignes qui sont lues par le programme dans le fichier resesausocial.txt ainsi que les 3 meilleurs messages mis à jour en direct. 
 
 Vous pouvez désactiver cet affichage en metant en commentaires les lignes 38 et 56 dans le fichier ReadFile.java.
+
+De plus, lorsqu'un client se connecte, on lui envoie les meilleurs messages sous forme XML, affichée dans le terminal et dans un fichier best.xml. 
