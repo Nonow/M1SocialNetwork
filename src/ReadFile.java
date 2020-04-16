@@ -129,6 +129,7 @@ public class ReadFile extends UnicastRemoteObject implements interfaceRMI {
             var += "<Best" + (i + 1) + ">\n";
             var += "<IdMessage>" + Best[i * 3] + "</IdMessage>\n";
             var += "<IdUser>" + Best[(i * 3) + 1] + "</IdUser>\n";
+            var += "</Best"  + (i + 1) + ">\n";
         }
         var += "</Bests>";
         return var;
