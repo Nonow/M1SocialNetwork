@@ -14,6 +14,7 @@ public class Server {
             System.out.println("Enregistrement de l'objet avec l'url : " + url);
             Naming.rebind(url, data);
 
+            //On crée un thread qui va lancer la function qui lit le fichier reseauSocial.txt
             new Thread(){
                 @Override
                 public void run(){
@@ -25,6 +26,7 @@ public class Server {
                 }
             }.start();
 
+            //En paralelle on lance un autre thread, qui va mettre a jour les score et créer
             new Thread(){
                 @Override
                 public void run(){
@@ -37,6 +39,7 @@ public class Server {
                     }
                 }
             }.start();
+
             System.out.println("Serveur lancé");
         } catch (RemoteException e) {
             e.printStackTrace();

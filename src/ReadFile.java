@@ -8,10 +8,7 @@ import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.concurrent.TimeUnit;
 import java.lang.*;
-import java.util.Scanner;
-
 import static java.lang.Thread.sleep;
-
 import java.util.*;
 
 public class ReadFile extends UnicastRemoteObject implements interfaceRMI {
@@ -25,34 +22,31 @@ public class ReadFile extends UnicastRemoteObject implements interfaceRMI {
         Best = new int[9];
     }
 
+    //Function qui lit le fichier reseauSocial.txt et crée les messages/commentaires
     public void launch() throws RemoteException {
         Random random = new Random();
 
         try (FileReader reader = new FileReader("reseauSocial.txt");
              BufferedReader br = new BufferedReader(reader)) {
 
-            // read line by line
+            //On fait une lecture ligne par ligne pour parcourir le fichier
             String line;
             while ((line = br.readLine()) != null) {
                 Date date = new Date();
                 //on attend 1 à 3 seconde
-                sleep(3000/(random.nextInt(3)+1));
+                sleep(3000 / (random.nextInt(3) + 1));
                 System.out.println(date + " Nouvelle ligne lu :" + line);
-                // on analyse la ligne lu
+                // Pour analyser la ligne lu, on la divise dans un tableau
                 String[] chaine = line.split("\\|");
-                //System.out.println(chaine.length);
                 //on verifie selon la longeur s'il s'agit d'un ajout de message ou commentaires
                 switch (chaine.length) {
-                    case 4:
-                        //System.out.println("case 4");
+                    case 4: //il s'agit d'un message
                         listMessage.add(new Message(date, Integer.parseInt(chaine[0]), Integer.parseInt(chaine[1]), chaine[2], chaine[3]));
                         break;
-                    case 5:
-                        //System.out.println("case 5");
+                    case 5: //il s'agit d'un commentaire de commentaire
                         listComment.add(new Comment(date, Integer.parseInt(chaine[0]), Integer.parseInt(chaine[1]), chaine[2], chaine[3], Integer.parseInt(chaine[4]), -1));
                         break;
-                    case 6:
-                        //System.out.println("case 6");
+                    case 6://il s'agit d'un commentaire de message
                         listComment.add(new Comment(date, Integer.parseInt(chaine[0]), Integer.parseInt(chaine[1]), chaine[2], chaine[3], -1, Integer.parseInt(chaine[5])));
                         break;
                     default:
@@ -66,6 +60,7 @@ public class ReadFile extends UnicastRemoteObject implements interfaceRMI {
             System.err.format("IOException: %s%n", e);
         }
     }
+
     /* Calcul du score_total et actualiser best */
     public void Score_total() throws RemoteException {
         Best = new int[9];
@@ -90,8 +85,8 @@ public class ReadFile extends UnicastRemoteObject implements interfaceRMI {
         }
     }
 
+    //Function qui actualise les 3meilleurs messages
     public void bestOf(Message msg) {
-        //System.out.println("Id message =  " + msg.getIdMessage() + " importance : " + msg.getImportance());
         int challenger = msg.getImportance();   // Score total du message
         if (challenger > Best[8] || Best[6] == msg.getIdMessage()) {    // Si challenger est plus grand que le 3eme du best
             if (challenger > Best[5] || Best[3] == msg.getIdMessage()) {    // Si plus grand que le 2eme
@@ -117,7 +112,8 @@ public class ReadFile extends UnicastRemoteObject implements interfaceRMI {
             }
         }
     }
-    /* Affichage best3 */
+
+    /* Affichage simple best3 */
     public String AfficherBest() {
         String var = "";
         for (int i = 0; i < Best.length; i++) {
@@ -130,17 +126,13 @@ public class ReadFile extends UnicastRemoteObject implements interfaceRMI {
     public String Best_XML() throws RemoteException {
         String var = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<Bests>\n";
         for (int i = 0; i < 3; i++) {
-            var += "<Best" + (i+1) + ">\n";
+            var += "<Best" + (i + 1) + ">\n";
             var += "<IdMessage>" + Best[i * 3] + "</IdMessage>\n";
             var += "<IdUser>" + Best[(i * 3) + 1] + "</IdUser>\n";
         }
         var += "</Bests>";
-
-
-
         return var;
     }
-
 
     // Actualise le score d'un commentaire comme la fonction Score_message
     public int Score_comment(int x) {
@@ -150,8 +142,6 @@ public class ReadFile extends UnicastRemoteObject implements interfaceRMI {
             if (cmt.getIdCommentaire() == listComment.get(i).getPidCommentaire()) {
                 int tmp = Score_comment(i);
                 score_tmp = score_tmp + tmp;
-                //listComment.set(i, tmp);
-                //cmt.addScore(tmp.getScore());
             }
         }
         if (cmt.getScore() < 0) {
@@ -160,11 +150,12 @@ public class ReadFile extends UnicastRemoteObject implements interfaceRMI {
         return score_tmp;
     }
 
-    /* Maj du score en fonction du temps. Réduit le score tout les 30s */
+    /* Maj du score en fonction du temps. Réduit le score tout les 30s de 1 */
     public void Maj_score() throws RemoteException {
         Date date = new Date();
         try {
             sleep(1000);
+            //On parcours les messages pour verifier s'il faut reduire leur point
             for (Message msg : listMessage) {
                 long d = Math.abs(date.getTime() - msg.getDate().getTime());
                 int time = (int) TimeUnit.SECONDS.convert(d, TimeUnit.MILLISECONDS);
@@ -173,18 +164,16 @@ public class ReadFile extends UnicastRemoteObject implements interfaceRMI {
                     bestOf(msg);
                 }
             }
+            //On parcours les commentaires pour verifier s'il faut reduire leur point
             for (Comment cmt : listComment) {
                 long d = Math.abs(date.getTime() - cmt.getDate().getTime());
                 int time = (int) TimeUnit.SECONDS.convert(d, TimeUnit.MILLISECONDS);
                 if (time != 0 && (time % 30) == 0) {
                     cmt.minusScore(1);
                 }
-
             }
-            // updateScore();
         } catch (InterruptedException e) {
             System.err.format("IOException: %s%n", e);
         }
     }
-
 }
